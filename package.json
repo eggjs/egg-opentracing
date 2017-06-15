@@ -1,0 +1,48 @@
+{
+  "name": "egg-opentracing",
+  "version": "0.0.0",
+  "description": "opentracing plugin for egg",
+  "eggPlugin": {
+    "name": "opentracing"
+  },
+  "files": [
+    "app",
+    "config",
+    "lib",
+    "app.js",
+    "agent.js"
+  ],
+  "scripts": {
+    "lint": "eslint app config lib test *.js",
+    "test": "npm run lint && npm run test-local",
+    "test-local": "egg-bin test",
+    "cov": "egg-bin cov",
+    "autod": "autod",
+    "ci": "npm run lint && npm run cov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:eggjs/egg-opentracing.git"
+  },
+  "bug": {
+    "url": "https://github.com/eggjs/egg/issues"
+  },
+  "author": "fengmk2",
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    "autod": "^2.8.0",
+    "autod-egg": "^1.0.0",
+    "egg": "^1.4.0",
+    "egg-bin": "^1.11.1",
+    "egg-ci": "^1.7.0",
+    "egg-mock": "^3.7.2",
+    "eslint": "^4.0.0",
+    "eslint-config-egg": "^4.2.1",
+    "webstorm-disable-index": "^1.2.0"
+  },
+  "engines": {
+    "node": ">= 6.0.0"
+  }
+}
