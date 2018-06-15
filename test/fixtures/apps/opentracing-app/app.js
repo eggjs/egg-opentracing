@@ -5,7 +5,6 @@ module.exports = app => {
   app.on('request', ctx => {
     const spanContext = ctx.tracer.extract('HTTP', ctx.header);
     const span = ctx.tracer.startSpan('http_server', { childOf: spanContext });
-    console.log(span);
     ctx[httpServerSpan] = span;
   });
   app.on('response', ctx => {
@@ -17,8 +16,7 @@ module.exports = app => {
     if (!args.headers) args.headers = {};
     const span = ctx.tracer.startSpan('http_client');
     span.setBaggageItem('a', 1);
-    ctx.tracer.inject(span.context, 'HTTP', args.headers);
-    console.log(span);
+    ctx.tracer.inject(span.context(), 'HTTP', args.headers);
     ctx[httpClientSpan] = span;
   });
 
