@@ -23,7 +23,7 @@ describe('test/opentracing.test.js', () => {
     it('should GET /', () => {
       return app.httpRequest()
         .get('/c1')
-        .expect('hi, opentracing')
+        .expect('success')
         .expect(200);
     });
   });
