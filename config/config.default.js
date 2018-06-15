@@ -6,5 +6,5 @@
  * @property {String} SOME_KEY - some description
  */
 exports.opentracing = {
-
+  globalTracer: require('../lib/tracer'),
 };
