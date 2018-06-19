@@ -2,6 +2,7 @@
 
 const mm = require('egg-mock');
 
+
 describe('test/opentracing.test.js', () => {
 
   describe('two application', () => {
@@ -20,10 +21,15 @@ describe('test/opentracing.test.js', () => {
     });
     afterEach(mm.restore);
 
-    it('should GET /', () => {
-      return app.httpRequest()
+    it('should GET /', async () => {
+      await app.httpRequest()
         .get('/c1')
-        .expect('success')
+        .type('json')
+        .expect({ a: 1 })
+        .expect(200);
+
+      await app.httpRequest()
+        .get('/checkSpan')
         .expect(200);
     });
   });
