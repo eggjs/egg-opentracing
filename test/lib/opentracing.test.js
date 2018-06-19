@@ -2,8 +2,7 @@
 
 const mm = require('egg-mock');
 
-
-describe('test/opentracing.test.js', () => {
+describe('test/lib/opentracing.test.js', () => {
 
   describe('two application', () => {
     let app;
@@ -33,4 +32,5 @@ describe('test/opentracing.test.js', () => {
         .expect(200);
     });
   });
+
 });

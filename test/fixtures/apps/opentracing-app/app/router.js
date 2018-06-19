@@ -20,7 +20,6 @@ module.exports = app => {
   });
 
   app.get('/checkSpan', async ctx => {
-    console.log(ctx.app.config.spans);
     const spans = ctx.app.config.spans;
     assert(spans.length === 5);
     assert(spans[0].traceId === spans[1].traceId);
