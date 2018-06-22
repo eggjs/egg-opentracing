@@ -112,6 +112,51 @@ describe('test/lib/tracer.test.js', () => {
   });
 
   describe('extract', () => {
+    it('should extract with http carrier', async () => {
+      const header = {
+        'x-b3-traceid': '1',
+        'x-b3-spanid': '2',
+        'x-b3-baggage': '{"a":1}',
+      };
+      const spanContext = ctx.tracer.extract('HTTP', header);
+      assert(spanContext.traceId === '1');
+      assert(spanContext.spanId === '2');
+      assert(spanContext.getBaggage('a') === 1);
+    });
+
+    it('should extract undefined when carrier dont have spanId and traceId', async () => {
+      app.opentracing.setCarrier('CUSTOM', class {
+        inject() {}
+        extract() {
+          return { spanId: '1' };
+        }
+      });
+
+      let spanContext = ctx.tracer.extract('CUSTOM', {});
+      assert(spanContext === null);
+
+      app.opentracing.setCarrier('CUSTOM', class {
+        inject() {}
+        extract() {
+          return { traceId: '1' };
+        }
+      });
+      spanContext = ctx.tracer.extract('CUSTOM', {});
+      assert(spanContext === null);
+    });
+
+    it('should extract without baggage', async () => {
+      app.opentracing.setCarrier('CUSTOM', class {
+        inject() {}
+        extract() {
+          return { spanId: '1', traceId: '2' };
+        }
+      });
+
+      const spanContext = ctx.tracer.extract('CUSTOM', {});
+      assert(spanContext.spanId === '1');
+      assert(spanContext.traceId === '2');
+    });
 
     it('should throw when no carrier is matched', async () => {
       try {
