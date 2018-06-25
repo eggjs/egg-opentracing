@@ -35,11 +35,11 @@
   "devDependencies": {
     "autod": "^3.0.1",
     "autod-egg": "^1.1.0",
-    "egg": "^2.9.0",
+    "egg": "^2.9.1",
     "egg-bin": "^4.7.0",
     "egg-ci": "^1.8.0",
     "egg-mock": "^3.17.2",
-    "eslint": "^4.19.1",
+    "eslint": "^5.0.0",
     "eslint-config-egg": "^7.0.0",
     "mz-modules": "^2.1.0",
     "webstorm-disable-index": "^1.2.0"
