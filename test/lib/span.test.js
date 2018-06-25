@@ -6,7 +6,7 @@ const Span = require('../../lib/span');
 const SpanContext = require('../../lib/span_context');
 
 
-describe.only('test/lib/tracer.test.js', () => {
+describe('test/lib/tracer.test.js', () => {
   let app;
   let ctx;
   before(async () => {
