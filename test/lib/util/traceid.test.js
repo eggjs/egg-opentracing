@@ -14,18 +14,18 @@ describe('test/lib/util/traceid.test.js', () => {
   });
 
   it('should getHexIp ok', () => {
-    assert(traceid._getHexIp('1.1.1.1') === '01010101');
-    assert(traceid._getHexIp('10.1.1.11') === '0a01010b');
-    assert(traceid._getHexIp('255.255.255.255') === 'ffffffff');
+    assert(traceid.getHexIP('1.1.1.1') === '01010101');
+    assert(traceid.getHexIP('10.1.1.11') === '0a01010b');
+    assert(traceid.getHexIP('255.255.255.255') === 'ffffffff');
   });
 
   it('should getNextId ok', () => {
-    const originId = traceid._getNextId();
-    assert(traceid._getNextId() === originId + 1);
+    const originId = traceid.getNextId();
+    assert(traceid.getNextId() === originId + 1);
     let count = 8000;
     let id;
     while (count--) {
-      id = traceid._getNextId();
+      id = traceid.getNextId();
     }
     assert(id === originId);
   });
