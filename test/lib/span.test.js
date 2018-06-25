@@ -79,4 +79,25 @@ describe('test/lib/tracer.test.js', () => {
     assert.deepEqual(span.getTags(), { a: 1, b: 2 });
   });
 
+  it('should generate spanId', () => {
+    // 0
+    const span1 = new Span(ctx);
+    // span1 -> span2 0.1
+    const span2 = new Span(ctx, { parentSpan: span1 });
+    // span1 -> span3 0.2
+    const span3 = new Span(ctx, { parentSpan: span1 });
+    // span2 -> span4 0.1.1
+    const span4 = new Span(ctx, { parentSpan: span2 });
+    // span2 -> span5 0.1.2
+    const span5 = new Span(ctx, { parentSpan: span2 });
+    // span3 -> span6 0.2.1
+    const span6 = new Span(ctx, { parentSpan: span3 });
+
+    assert(span1.spanId === '0');
+    assert(span2.spanId === '0.1');
+    assert(span3.spanId === '0.2');
+    assert(span4.spanId === '0.1.1');
+    assert(span5.spanId === '0.1.2');
+    assert(span6.spanId === '0.2.1');
+  });
 });
