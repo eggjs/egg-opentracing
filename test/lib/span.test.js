@@ -100,4 +100,16 @@ describe('test/lib/tracer.test.js', () => {
     assert(span5.spanId === '0.1.2');
     assert(span6.spanId === '0.2.1');
   });
+
+  it('should generate traceId', () => {
+    let span = new Span(ctx);
+    while (!/9000\w*$/.test(span.traceId)) {
+      span = new Span(ctx);
+    }
+
+    // The increment ID is between 1000 and 9000,
+    // and the next one is 1000
+    span = new Span(ctx);
+    assert(/1000\w*$/.test(span.traceId));
+  });
 });
