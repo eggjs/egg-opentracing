@@ -1,6 +1,6 @@
 {
   "name": "egg-opentracing",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "opentracing plugin for egg",
   "eggPlugin": {
     "name": "opentracing"
@@ -13,7 +13,7 @@
     "agent.js"
   ],
   "scripts": {
-    "lint": "eslint app config lib test *.js",
+    "lint": "eslint .",
     "test": "npm run lint && npm run test-local",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
@@ -27,7 +27,7 @@
   "bug": {
     "url": "https://github.com/eggjs/egg/issues"
   },
-  "author": "fengmk2",
+  "author": "popomore",
   "dependencies": {
     "address": "^1.0.3",
     "opentracing": "^0.14.3"
