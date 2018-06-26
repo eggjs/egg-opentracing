@@ -4,6 +4,7 @@ const assert = require('assert');
 
 module.exports = app => {
   app.get('/c1', async ctx => {
+    ctx.tracer.currentSpan.setBaggageItem('a', 1);
     const result = await ctx.curl(process.env.HOST + '/c2', {
       dataType: 'json',
     });

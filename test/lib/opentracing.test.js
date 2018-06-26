@@ -2,7 +2,7 @@
 
 const mm = require('egg-mock');
 
-describe('test/lib/opentracing.test.js', () => {
+describe.only('test/lib/opentracing.test.js', () => {
 
   describe('two application', () => {
     let app;

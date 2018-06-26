@@ -20,9 +20,7 @@
 [download-image]: https://img.shields.io/npm/dm/egg-opentracing.svg?style=flat-square
 [download-url]: https://npmjs.org/package/egg-opentracing
 
-<!--
-Description here.
--->
+Implementation of [opentracing](http://opentracing.io/) in Egg.js
 
 ## Install
 
