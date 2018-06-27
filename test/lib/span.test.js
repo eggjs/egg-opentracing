@@ -78,7 +78,13 @@ describe('test/lib/span.test.js', () => {
     span.setTag('a', 1);
     span.setTag('b', 2);
     assert(span.getTag('a') === 1);
-    assert.deepEqual(span.getTags(), { a: 1, b: 2 });
+    assert.deepEqual(span.getTags(), {
+      a: 1,
+      b: 2,
+      appname: 'opentracing-test',
+      process_id: process.pid,
+      worker_id: 0,
+    });
   });
 
   it('should generate spanId', () => {
@@ -95,12 +101,12 @@ describe('test/lib/span.test.js', () => {
     // span3 -> span6 0.2.1
     const span6 = new Span(ctx, { parentSpan: span3 });
 
-    assert(span1.spanId === '0');
-    assert(span2.spanId === '0.1');
-    assert(span3.spanId === '0.2');
-    assert(span4.spanId === '0.1.1');
-    assert(span5.spanId === '0.1.2');
-    assert(span6.spanId === '0.2.1');
+    assert(span1.rpcId === '0');
+    assert(span2.rpcId === '0.1');
+    assert(span3.rpcId === '0.2');
+    assert(span4.rpcId === '0.1.1');
+    assert(span5.rpcId === '0.1.2');
+    assert(span6.rpcId === '0.2.1');
   });
 
   it('should generate traceId', () => {
