@@ -5,12 +5,14 @@ const path = require('path');
 module.exports = (appInfo, appConfig) => {
   const config = {};
 
+  /**
+   * egg-opentracing default config
+   * @member Config#opentracing
+   * @property {String} globalTracer - override the default Tracer
+   * @property {Object} carrier - the map of carriers
+   * @property {Object} collector - the map of collectors
+   */
   config.opentracing = {
-    /**
-     * egg-opentracing default config
-     * @member Config#opentracing
-     * @property {String} SOME_KEY - some description
-     */
     globalTracer: require('../lib/tracer'),
     carrier: {
       HTTP: require('../lib/carrier/http_carrier'),

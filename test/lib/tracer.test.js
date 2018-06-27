@@ -36,7 +36,7 @@ describe('test/lib/tracer.test.js', () => {
       assert(span === ctx.tracer.currentSpan);
       assert(ctx.tracer.traceId === span.traceId);
       assert(span.parentSpanId === '');
-      assert(span.getTag('operationName') === 'test');
+      assert(span.name === 'test');
     });
 
     it('should startSpan from existing span', async () => {

@@ -30,21 +30,4 @@ describe('test/lib/util/traceid.test.js', () => {
     assert(id === originId);
   });
 
-  describe('traceid.parse', () => {
-    it('traceId with pid should parse ok', () => {
-      const tracerObj = traceid.parse('0ad55cdd148341778428233525608');
-      assert(tracerObj.tracerIP === '10.213.92.221');
-      assert(tracerObj.timestamp.getTime() === 1483417784282);
-      assert(tracerObj.nextId === '3352');
-      assert(tracerObj.pid === '5608');
-    });
-
-    it('no pid traceId should parse ok', () => {
-      const tracerObj = traceid.parse('0ad55cdd14834177842823352');
-      assert(tracerObj.tracerIP === '10.213.92.221');
-      assert(tracerObj.timestamp.getTime() === 1483417784282);
-      assert(tracerObj.nextId === '3352');
-      assert(tracerObj.pid === '');
-    });
-  });
 });

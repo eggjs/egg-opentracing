@@ -70,7 +70,7 @@ describe('test/lib/span.test.js', () => {
   it('should create operationName to tag', () => {
     const span = new Span(ctx);
     span.setOperationName('http');
-    assert(span.getTag('operationName') === 'http');
+    assert(span.name === 'http');
   });
 
   it('should setTag/getTag', () => {
