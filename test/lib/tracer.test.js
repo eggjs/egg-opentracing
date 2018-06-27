@@ -10,7 +10,9 @@ describe('test/lib/tracer.test.js', () => {
   let app;
   let ctx;
   before(async () => {
-    app = mm.app('apps/opentracing-app');
+    app = mm.app({
+      baseDir: 'apps/opentracing-app',
+    });
     await app.ready();
   });
   after(async () => {
