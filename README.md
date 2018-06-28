@@ -22,6 +22,10 @@
 
 Implementation of [opentracing](http://opentracing.io/) in Egg.js
 
+- Integrate httpserver and httpclient span
+- Customize carrier
+- Customize collector
+
 ## Install
 
 ```bash
@@ -38,19 +42,107 @@ exports.opentracing = {
 };
 ```
 
-## Configuration
-
-```js
-// {app_root}/config/config.default.js
-exports.opentracing = {
-};
-```
+### Configuration
 
 see [config/config.default.js](config/config.default.js) for more detail.
 
-## Example
+### Start a span
 
-<!-- example here -->
+You can start a span by `startSpan` with operationName
+
+```js
+const span = ctx.tracer.startSpan('request_egg');
+await ctx.curl('https://eggjs.org');
+span.finish();
+```
+
+**Note: httpclient has been supported by default**
+
+### Customize carrier
+
+Carrier can be [injected](https://github.com/opentracing/specification/blob/master/specification.md#inject-a-spancontext-into-a-carrier) and [extracted](https://github.com/opentracing/specification/blob/master/specification.md#extract-a-spancontext-from-a-carrier), so you can define a class for that.
+
+```js
+// lib/rpc_carrier.js
+class RPCCarrier {
+  inject(spanContext) {
+    return {};
+  }
+
+  extract(carrier) {
+    return {
+      // traceId,
+      // spanId,
+      // baggage,
+    }
+  }
+}
+```
+
+Then configure it in `config/config.default.js` with a format name.
+
+```js
+// config/config.default.js
+exports.opentracing = {
+  carrier: {
+    RPC: require('../lib/rpc_carrier'),
+  },
+};
+```
+
+After that, you can use the format to inject or extract.
+
+```js
+// inject
+const span = ctx.tracer.startSpan('rpc');
+const carrier = {};
+ctx.tracer.inject(span, 'RPC', carrier);
+await ctx.rpc.invoke({}, { carrier });
+span.finish();
+```
+
+### Customize collector
+
+
+## API
+
+### Tracer
+
+Tracer extends [Tracer of opentracing](https://opentracing-javascript.surge.sh/classes/tracer.html), you can get the instance by `ctx.tracer`.
+
+### Span
+
+Span extends [Span of opentracing](https://opentracing-javascript.surge.sh/classes/span.html), it's instantiated by `ctx.tracer.startSpan`.
+
+- {String} name: operation name
+- {String} traceId: the traceId of the span
+- {String} spanId: the id of the span
+- {String} parentSpanId: the id of parent span, it will be `''` if there's no parent span.
+- {String} getTag(key): return the value of the specified tag
+- {Object} getTags(): return all tags
+
+### SpanContext
+
+SpanContext extends [SpanContext of opentracing](https://opentracing-javascript.surge.sh/classes/spancontext.html), it's instantiated by `span.context()`.
+
+- {String} traceId: the traceId of the span
+- {String} spanId: the id of the span
+- {Void} setBaggage(key, value): set one baggage
+- {String} getBaggage(key): return the value of the specified baggage
+- {Void} setBaggages(baggages): set multiple baggages
+- {Object} getBaggages(): return all baggages
+
+### Carrier
+
+Carrier is a class that transform between SpanContext and carrier.
+
+- {Object} inject(SpanContext): implement this method that transform SpanContext to carrier object.
+- {Object} extract(carrier): implement this method that transform carrier object to SpanContext, extract must return traceId and spanId.
+
+### Collector
+
+Collector is 
+
 
 ## Questions & Suggestions
 

@@ -45,7 +45,7 @@ describe('test/lib/span.test.js', () => {
 
     span.finish();
     assert(typeof span.finishTime === 'number');
-    assert(span.finishTime > span.startTime);
+    assert(span.finishTime >= span.startTime);
   });
 
   it('should ceate span with parent', () => {
@@ -81,6 +81,7 @@ describe('test/lib/span.test.js', () => {
     assert.deepEqual(span.getTags(), {
       a: 1,
       b: 2,
+      component: 'egg',
       appname: 'opentracing-test',
       'process.id': process.pid,
       'worker.id': 0,

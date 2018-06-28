@@ -126,13 +126,14 @@ describe('test/lib/opentracing.test.js', () => {
 
       const tags = app.config.spans[0].getTags();
       assert(tags.appname === 'opentracing-test');
+      assert(tags.component === 'egg');
       assert(tags['worker.id'] === 0);
       assert(tags['process.id'] === process.pid);
-      assert(tags['http.server.url'] === '/httpserver');
-      assert(tags['http.server.method'] === 'GET');
-      assert(tags['http.server.status'] === 200);
-      assert(tags['http.server.request.size'] === 0);
-      assert(tags['http.server.response.size'] === 4);
+      assert(tags['http.url'] === '/httpserver');
+      assert(tags['http.method'] === 'GET');
+      assert(tags['http.status_code'] === 200);
+      assert(tags['http.request_size'] === 0);
+      assert(tags['http.response_size'] === 4);
     });
 
     it('should support app.curl', async () => {
@@ -144,11 +145,11 @@ describe('test/lib/opentracing.test.js', () => {
       assert(tags.appname === 'opentracing-test');
       assert(tags['worker.id'] === 0);
       assert(tags['process.id'] === process.pid);
-      assert(tags['http.client.url'] === 'http://www.alibaba.com/');
-      assert(tags['http.client.method'] === 'GET');
-      assert(tags['http.client.status'] === 200);
-      assert(tags['http.client.request.size'] === 0);
-      assert(tags['http.client.response.size']);
+      assert(tags['http.url'] === 'http://www.alibaba.com/');
+      assert(tags['http.method'] === 'GET');
+      assert(tags['http.status_code'] === 200);
+      assert(tags['http.request_size'] === 0);
+      assert(tags['http.response_size']);
     });
 
     it('should support ctx.curl', async () => {
@@ -160,11 +161,11 @@ describe('test/lib/opentracing.test.js', () => {
       assert(tags.appname === 'opentracing-test');
       assert(tags['worker.id'] === 0);
       assert(tags['process.id'] === process.pid);
-      assert(tags['http.client.url'] === 'http://www.alibaba.com/');
-      assert(tags['http.client.method'] === 'GET');
-      assert(tags['http.client.status'] === 200);
-      assert(tags['http.client.request.size'] === 0);
-      assert(tags['http.client.response.size']);
+      assert(tags['http.url'] === 'http://www.alibaba.com/');
+      assert(tags['http.method'] === 'GET');
+      assert(tags['http.status_code'] === 200);
+      assert(tags['http.request_size'] === 0);
+      assert(tags['http.response_size']);
     });
   });
 

@@ -27,16 +27,17 @@ function logHTTPServer(app) {
   const httpServerSpan = Symbol('Context#httpServerSpan');
   app.on('request', ctx => {
     const spanContext = ctx.tracer.extract('HTTP', ctx.header);
-    const span = ctx.tracer.startSpan('http.server', { childOf: spanContext });
+    const span = ctx.tracer.startSpan('http_server', { childOf: spanContext });
+    span.setTag('span.kind', 'server');
     ctx[httpServerSpan] = span;
   });
   app.on('response', ctx => {
     const span = ctx[httpServerSpan];
-    span.setTag('http.server.url', ctx.path);
-    span.setTag('http.server.method', ctx.method);
-    span.setTag('http.server.status', ctx.realStatus);
-    span.setTag('http.server.request.size', ctx.get('content-length') || 0);
-    span.setTag('http.server.response.size', ctx.length || 0);
+    span.setTag('http.url', ctx.path);
+    span.setTag('http.method', ctx.method);
+    span.setTag('http.status_code', ctx.realStatus);
+    span.setTag('http.request_size', ctx.get('content-length') || 0);
+    span.setTag('http.response_size', ctx.length || 0);
     span.finish();
   });
 }
@@ -53,6 +54,7 @@ function logHTTPClient(app) {
     const args = req.args;
     if (!args.headers) args.headers = {};
     const span = ctx.tracer.startSpan('http_client');
+    span.setTag('span.kind', 'client');
     ctx.tracer.inject(span.context(), 'HTTP', args.headers);
     ctx[httpClientSpan] = span;
   });
@@ -60,11 +62,11 @@ function logHTTPClient(app) {
   app.httpclient.on('response', ({ req, res }) => {
     const ctx = req.ctx;
     const span = ctx[httpClientSpan];
-    span.setTag('http.client.url', req.url);
-    span.setTag('http.client.method', req.options.method);
-    span.setTag('http.client.status', res.status);
-    span.setTag('http.client.request.size', req.size || 0);
-    span.setTag('http.client.response.size', res.size || 0);
+    span.setTag('http.url', req.url);
+    span.setTag('http.method', req.options.method);
+    span.setTag('http.status_code', res.status);
+    span.setTag('http.request_size', req.size || 0);
+    span.setTag('http.response_size', res.size || 0);
     span.finish();
   });
 }
