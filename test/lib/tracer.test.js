@@ -26,7 +26,7 @@ describe('test/lib/tracer.test.js', () => {
 
     it('should start and finish', async () => {
       const span = ctx.tracer.startSpan('test');
-      await sleep(1);
+      await sleep(1000);
       span.finish();
       assert(typeof span.startTime === 'number');
       assert(typeof span.finishTime === 'number');
