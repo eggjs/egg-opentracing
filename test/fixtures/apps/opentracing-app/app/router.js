@@ -36,4 +36,15 @@ module.exports = app => {
     ctx.body = 'success';
   });
 
+  app.get('/httpserver', async ctx => {
+    ctx.body = 'done';
+  });
+
+  app.get('/app_curl', async ctx => {
+    ctx.body = await app.curl('http://www.alibaba.com');
+  });
+
+  app.get('/ctx_curl', async ctx => {
+    ctx.body = await ctx.curl('http://www.alibaba.com');
+  });
 };

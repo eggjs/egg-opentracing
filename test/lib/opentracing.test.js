@@ -106,4 +106,67 @@ describe('test/lib/opentracing.test.js', () => {
     });
   });
 
+  describe('default span', () => {
+    let app;
+    beforeEach(async () => {
+      app = mm.app({
+        baseDir: 'apps/opentracing-app',
+      });
+      await app.ready();
+    });
+    afterEach(async () => {
+      await app.close();
+    });
+    afterEach(mm.restore);
+
+    it('should support http_server', async () => {
+      await app.httpRequest()
+        .get('/httpserver')
+        .expect(200);
+
+      const tags = app.config.spans[0].getTags();
+      assert(tags.appname === 'opentracing-test');
+      assert(tags['worker.id'] === 0);
+      assert(tags['process.id'] === process.pid);
+      assert(tags['http.server.url'] === '/httpserver');
+      assert(tags['http.server.method'] === 'GET');
+      assert(tags['http.server.status'] === 200);
+      assert(tags['http.server.request.size'] === 0);
+      assert(tags['http.server.response.size'] === 4);
+    });
+
+    it('should support app.curl', async () => {
+      await app.httpRequest()
+        .get('/app_curl')
+        .expect(200);
+
+      const tags = app.config.spans[0].getTags();
+      assert(tags.appname === 'opentracing-test');
+      assert(tags['worker.id'] === 0);
+      assert(tags['process.id'] === process.pid);
+      assert(tags['http.client.url'] === 'http://www.alibaba.com/');
+      assert(tags['http.client.method'] === 'GET');
+      assert(tags['http.client.status'] === 200);
+      assert(tags['http.client.request.size'] === 0);
+      assert(tags['http.client.response.size']);
+    });
+
+    it('should support ctx.curl', async () => {
+      await app.httpRequest()
+        .get('/ctx_curl')
+        .expect(200);
+
+      const tags = app.config.spans[0].getTags();
+      assert(tags.appname === 'opentracing-test');
+      assert(tags['worker.id'] === 0);
+      assert(tags['process.id'] === process.pid);
+      assert(tags['http.client.url'] === 'http://www.alibaba.com/');
+      assert(tags['http.client.method'] === 'GET');
+      assert(tags['http.client.status'] === 200);
+      assert(tags['http.client.request.size'] === 0);
+      assert(tags['http.client.response.size']);
+    });
+  });
+
+
 });
