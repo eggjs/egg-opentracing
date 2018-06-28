@@ -103,6 +103,33 @@ span.finish();
 
 ### Customize collector
 
+Collector will be triggered when span finished, you can implement it to write logs or report to server.
+
+```js
+// lib/log_collector.js
+class LogCollector {
+  constructor(app) {
+    this.app = app;
+  }
+
+  collect(span) {
+    this.app.logger.info('%s,%s', span.traceId, span.spanId);
+  }
+}
+```
+
+Then configure it in `config/config.default.js`.
+
+```js
+// config/config.default.js
+exports.opentracing = {
+  collector: {
+    log: require('../lib/log_collector'),
+  },
+};
+```
+
+Note: zipkin collector has been implemented in [egg-zipkin](https://github.com/eggjs/egg-zipkin/).
 
 ## API
 
@@ -141,8 +168,7 @@ Carrier is a class that transform between SpanContext and carrier.
 
 ### Collector
 
-Collector is 
-
+- {Void} collect(span): implement this method that report span.
 
 ## Questions & Suggestions
 
