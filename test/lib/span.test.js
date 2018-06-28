@@ -82,8 +82,8 @@ describe('test/lib/span.test.js', () => {
       a: 1,
       b: 2,
       appname: 'opentracing-test',
-      process_id: process.pid,
-      worker_id: 0,
+      'process.id': process.pid,
+      'worker.id': 0,
     });
   });
 
