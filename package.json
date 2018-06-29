@@ -1,6 +1,6 @@
 {
   "name": "egg-opentracing",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "opentracing plugin for egg",
   "eggPlugin": {
     "name": "opentracing"
