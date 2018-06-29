@@ -185,7 +185,7 @@ describe('test/lib/opentracing.test.js', () => {
     });
   });
 
-  describe('disable collector', () => {
+  describe('disable default collector', () => {
     let app;
     before(async () => {
       app = mm.app({
@@ -208,6 +208,29 @@ describe('test/lib/opentracing.test.js', () => {
 
       const exists = await fs.exists(path.join(app.config.baseDir, 'logs/opentracing-test/opentracing.log'));
       assert(!exists);
+    });
+  });
+
+  describe('disable default carrier', () => {
+    let app;
+    before(async () => {
+      app = mm.app({
+        baseDir: 'apps/disable-carrier',
+      });
+      await app.ready();
+    });
+    after(() => app.close());
+
+    it('should not create opentracingLogger', async () => {
+      const ctx = app.mockContext();
+      const span = ctx.tracer.startSpan('test');
+      const carrier = {};
+      try {
+        ctx.tracer.inject(span, 'HTTP', carrier);
+        throw new Error('should not run');
+      } catch (err) {
+        assert(err.message === 'HTTP is unknown carrier');
+      }
     });
   });
 });
