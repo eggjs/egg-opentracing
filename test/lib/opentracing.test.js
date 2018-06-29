@@ -51,6 +51,10 @@ describe('test/lib/opentracing.test.js', () => {
     });
     afterEach(mm.restore);
 
+    it('should return when argument isnt span', () => {
+      assert(app.opentracing.collect() === undefined);
+    });
+
     it('should use default log collector', async () => {
       const ctx = app.mockContext();
       const span = ctx.tracer.startSpan('a');
