@@ -138,4 +138,19 @@ describe('test/lib/span.test.js', () => {
     span = new Span(ctx);
     assert(/1000\w*$/.test(span.traceId));
   });
+
+  it('should getBaggage/setBaggage', () => {
+    const span = new Span(ctx);
+    const spanContext = span.context();
+    spanContext.setBaggage('', 1);
+    spanContext.setBaggage('a', 1);
+    spanContext.setBaggages({ b: 2 });
+    spanContext.setBaggages();
+    assert(spanContext.getBaggage('a') === 1);
+    assert(spanContext.getBaggage('b') === 2);
+    assert.deepEqual(spanContext.getBaggages(), {
+      a: 1,
+      b: 2,
+    });
+  });
 });
