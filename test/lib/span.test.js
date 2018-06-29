@@ -2,8 +2,12 @@
 
 const assert = require('assert');
 const mm = require('egg-mock');
+const address = require('address');
 const Span = require('../../lib/span');
 const SpanContext = require('../../lib/span_context');
+
+const IPV4 = address.ip();
+const IPV6 = address.ipv6();
 
 
 describe('test/lib/span.test.js', () => {
@@ -88,6 +92,8 @@ describe('test/lib/span.test.js', () => {
       appname: 'opentracing-test',
       'process.id': process.pid,
       'worker.id': 0,
+      'local.ipv4': IPV4,
+      'local.ipv6': IPV6,
     });
 
     const span2 = new Span(ctx);
@@ -102,6 +108,8 @@ describe('test/lib/span.test.js', () => {
       appname: 'opentracing-test',
       'process.id': process.pid,
       'worker.id': 0,
+      'local.ipv4': IPV4,
+      'local.ipv6': IPV6,
     });
   });
 
