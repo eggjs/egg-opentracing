@@ -146,6 +146,8 @@ describe('test/lib/opentracing.test.js', () => {
       assert(tags.component === 'egg');
       assert(tags['worker.id'] === 0);
       assert(tags['process.id'] === process.pid);
+      assert(/^\d+$/.test(tags['peer.port']));
+      assert(tags['peer.ipv6']);
       assert(tags['http.url'] === '/httpserver');
       assert(tags['http.method'] === 'GET');
       assert(tags['http.status_code'] === 200);

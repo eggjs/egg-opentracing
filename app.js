@@ -32,7 +32,18 @@ function logHTTPServer(app) {
     ctx[httpServerSpan] = span;
   });
   app.on('response', ctx => {
+    const socket = ctx.req.connection;
+
     const span = ctx[httpServerSpan];
+    // TODO: what's the service name of the remote server
+    // span.setTag('peer.service');
+    span.setTag('peer.port', socket.remotePort);
+    /* istanbul ignore if */
+    if (socket.remoteFamily === 'IPv4') {
+      span.setTag('peer.ipv4', socket.remoteAddress);
+    } else if (socket.remoteFamily === 'IPv6') {
+      span.setTag('peer.ipv6', socket.remoteAddress);
+    }
     span.setTag('http.url', ctx.path);
     span.setTag('http.method', ctx.method);
     span.setTag('http.status_code', ctx.realStatus);
