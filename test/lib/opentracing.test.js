@@ -51,6 +51,19 @@ describe('test/lib/opentracing.test.js', () => {
     });
     afterEach(mm.restore);
 
+    it('should use default log collector', async () => {
+      const ctx = app.mockContext();
+      const span = ctx.tracer.startSpan('a');
+      await sleep(1000);
+      span.finish();
+      await sleep(1000);
+      const log = await fs.readFile(path.join(app.config.baseDir, 'logs/opentracing-test/opentracing.log'), 'utf8');
+      const obj = JSON.parse(log);
+      assert(obj.spanId === span.spanId);
+      assert(obj.traceId === span.traceId);
+      assert(obj.name === span.name);
+    });
+
     it('should check collector', async () => {
       assert.throws(() => {
         app.opentracing.setCollector('a', {});
@@ -172,5 +185,29 @@ describe('test/lib/opentracing.test.js', () => {
     });
   });
 
+  describe('disable collector', () => {
+    let app;
+    before(async () => {
+      app = mm.app({
+        baseDir: 'apps/disable-collector',
+      });
+      await app.ready();
+    });
+    after(() => app.close());
 
+    it('should not create opentracingLogger', async () => {
+      assert(!app.loggers.opentracingLogger);
+    });
+
+    it('should not use log collector', async () => {
+      const ctx = app.mockContext();
+      const span = ctx.tracer.startSpan('a');
+      await sleep(1000);
+      span.finish();
+      await sleep(1000);
+
+      const exists = await fs.exists(path.join(app.config.baseDir, 'logs/opentracing-test/opentracing.log'));
+      assert(!exists);
+    });
+  });
 });
