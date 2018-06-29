@@ -38,7 +38,7 @@ function logHTTPServer(app) {
     // TODO: what's the service name of the remote server
     // span.setTag('peer.service');
     span.setTag('peer.port', socket.remotePort);
-    /* istanbul ignore else */
+    /* istanbul ignore if */
     if (socket.remoteFamily === 'IPv4') {
       span.setTag('peer.ipv4', socket.remoteAddress);
     } else if (socket.remoteFamily === 'IPv6') {
