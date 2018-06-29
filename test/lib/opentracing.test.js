@@ -51,6 +51,23 @@ describe('test/lib/opentracing.test.js', () => {
     });
     afterEach(mm.restore);
 
+    it('should return when argument isnt span', () => {
+      assert(app.opentracing.collect() === undefined);
+    });
+
+    it('should use default log collector', async () => {
+      const ctx = app.mockContext();
+      const span = ctx.tracer.startSpan('a');
+      await sleep(1000);
+      span.finish();
+      await sleep(1000);
+      const log = await fs.readFile(path.join(app.config.baseDir, 'logs/opentracing-test/opentracing.log'), 'utf8');
+      const obj = JSON.parse(log);
+      assert(obj.spanId === span.spanId);
+      assert(obj.traceId === span.traceId);
+      assert(obj.name === span.name);
+    });
+
     it('should check collector', async () => {
       assert.throws(() => {
         app.opentracing.setCollector('a', {});
@@ -166,8 +183,58 @@ describe('test/lib/opentracing.test.js', () => {
       assert(tags['http.status_code'] === 200);
       assert(tags['http.request_size'] === 0);
       assert(tags['http.response_size']);
+      assert(tags['peer.hostname'] === 'www.alibaba.com');
+      assert(tags['peer.port'] === 80);
+      assert(/\d+\.\d+\.\d+\.\d+/.test(tags['peer.ipv4']));
     });
   });
 
+  describe('disable default collector', () => {
+    let app;
+    before(async () => {
+      app = mm.app({
+        baseDir: 'apps/disable-collector',
+      });
+      await app.ready();
+    });
+    after(() => app.close());
 
+    it('should not create opentracingLogger', async () => {
+      assert(!app.loggers.opentracingLogger);
+    });
+
+    it('should not use log collector', async () => {
+      const ctx = app.mockContext();
+      const span = ctx.tracer.startSpan('a');
+      await sleep(1000);
+      span.finish();
+      await sleep(1000);
+
+      const exists = await fs.exists(path.join(app.config.baseDir, 'logs/opentracing-test/opentracing.log'));
+      assert(!exists);
+    });
+  });
+
+  describe('disable default carrier', () => {
+    let app;
+    before(async () => {
+      app = mm.app({
+        baseDir: 'apps/disable-carrier',
+      });
+      await app.ready();
+    });
+    after(() => app.close());
+
+    it('should not create opentracingLogger', async () => {
+      const ctx = app.mockContext();
+      const span = ctx.tracer.startSpan('test');
+      const carrier = {};
+      try {
+        ctx.tracer.inject(span, 'HTTP', carrier);
+        throw new Error('should not run');
+      } catch (err) {
+        assert(err.message === 'HTTP is unknown carrier');
+      }
+    });
+  });
 });

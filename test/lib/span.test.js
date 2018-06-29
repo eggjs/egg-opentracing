@@ -2,8 +2,12 @@
 
 const assert = require('assert');
 const mm = require('egg-mock');
+const address = require('address');
 const Span = require('../../lib/span');
 const SpanContext = require('../../lib/span_context');
+
+const IPV4 = address.ip();
+const IPV6 = address.ipv6();
 
 
 describe('test/lib/span.test.js', () => {
@@ -55,16 +59,19 @@ describe('test/lib/span.test.js', () => {
     const span1 = new Span(ctx, { parentSpan });
     assert(span1.traceId === parentSpan.traceId);
     assert(span1.parentSpanId === parentSpan.spanId);
-    // TODO: spanId generate
     assert(span1.spanId !== parentSpan.spanId);
     assert(span1.getBaggageItem('a') === 1);
 
     const span = new Span(ctx, { parentSpan: parentSpan.context() });
     assert(span.traceId === parentSpan.traceId);
     assert(span.parentSpanId === parentSpan.spanId);
-    // TODO: spanId generate
     assert(span.spanId !== parentSpan.spanId);
     assert(span.getBaggageItem('a') === 1);
+  });
+
+  it('should ignore unknown parent span', () => {
+    const span = new Span(ctx, { parentSpan: {} });
+    assert(!span.parentSpanId);
   });
 
   it('should create operationName to tag', () => {
@@ -74,17 +81,35 @@ describe('test/lib/span.test.js', () => {
   });
 
   it('should setTag/getTag', () => {
-    const span = new Span(ctx);
-    span.setTag('a', 1);
-    span.setTag('b', 2);
-    assert(span.getTag('a') === 1);
-    assert.deepEqual(span.getTags(), {
+    const span1 = new Span(ctx);
+    span1.setTag('a', 1);
+    span1.setTag('b', 2);
+    assert(span1.getTag('a') === 1);
+    assert.deepEqual(span1.getTags(), {
       a: 1,
       b: 2,
       component: 'egg',
       appname: 'opentracing-test',
       'process.id': process.pid,
       'worker.id': 0,
+      'local.ipv4': IPV4,
+      'local.ipv6': IPV6,
+    });
+
+    const span2 = new Span(ctx);
+    span2.addTags({ a: 1, b: 2 });
+    assert(span2.getTag('a') === 1);
+    assert(span2.getTag('b') === 2);
+
+    const span3 = new Span(ctx);
+    span3.setTag('', 1);
+    assert.deepEqual(span3.getTags(), {
+      component: 'egg',
+      appname: 'opentracing-test',
+      'process.id': process.pid,
+      'worker.id': 0,
+      'local.ipv4': IPV4,
+      'local.ipv6': IPV6,
     });
   });
 
@@ -120,5 +145,20 @@ describe('test/lib/span.test.js', () => {
     // and the next one is 1000
     span = new Span(ctx);
     assert(/1000\w*$/.test(span.traceId));
+  });
+
+  it('should getBaggage/setBaggage', () => {
+    const span = new Span(ctx);
+    const spanContext = span.context();
+    spanContext.setBaggage('', 1);
+    spanContext.setBaggage('a', 1);
+    spanContext.setBaggages({ b: 2 });
+    spanContext.setBaggages();
+    assert(spanContext.getBaggage('a') === 1);
+    assert(spanContext.getBaggage('b') === 2);
+    assert.deepEqual(spanContext.getBaggages(), {
+      a: 1,
+      b: 2,
+    });
   });
 });

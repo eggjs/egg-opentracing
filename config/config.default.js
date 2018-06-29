@@ -37,6 +37,7 @@ module.exports = (appInfo, appConfig) => {
 };
 
 function checkDisableLogCollector(appConfig) {
+  /* istanbul ignore if */
   if (!appConfig.opentracing) return false;
   if (!appConfig.opentracing.collector) return false;
   return appConfig.opentracing.collector.log === false;
