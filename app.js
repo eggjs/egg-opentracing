@@ -62,6 +62,16 @@ function logHTTPClient(app) {
   app.httpclient.on('response', ({ req, res }) => {
     const ctx = req.ctx;
     const span = ctx[httpClientSpan];
+    const address = req.socket.address();
+    span.setTag('peer.hostname', req.options.host);
+    span.setTag('peer.port', req.options.port);
+    span.setTag('peer.service', req.options.host);
+    /* istanbul ignore else */
+    if (address.family === 'IPv4') {
+      span.setTag('peer.ipv4', address.address);
+    } else if (address.family === 'IPv6') {
+      span.setTag('peer.ipv6', address.address);
+    }
     span.setTag('http.url', req.url);
     span.setTag('http.method', req.options.method);
     span.setTag('http.status_code', res.status);

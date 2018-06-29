@@ -166,6 +166,9 @@ describe('test/lib/opentracing.test.js', () => {
       assert(tags['http.status_code'] === 200);
       assert(tags['http.request_size'] === 0);
       assert(tags['http.response_size']);
+      assert(tags['peer.hostname'] === 'www.alibaba.com');
+      assert(tags['peer.port'] === 80);
+      assert(/\d+\.\d+\.\d+\.\d+/.test(tags['peer.ipv4']));
     });
   });
 
