@@ -47,4 +47,12 @@ module.exports = app => {
   app.get('/ctx_curl', async ctx => {
     ctx.body = await ctx.curl('http://www.alibaba.com');
   });
+
+  app.get('/ctx_multi_curl', async ctx => {
+    await Promise.all([
+      ctx.curl('http://www.aliexpress.com'),
+      ctx.curl('http://www.alibaba.com'),
+    ]);
+    ctx.body = 'ok';
+  });
 };

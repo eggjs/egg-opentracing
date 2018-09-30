@@ -54,7 +54,7 @@ function logHTTPServer(app) {
 }
 
 function logHTTPClient(app) {
-  const httpClientSpan = Symbol('Context#httpClientSpan');
+  const _span = Symbol.for('Request#span');
   app.httpclient.on('request', req => {
     let ctx = req.ctx;
     if (!ctx) {
@@ -67,12 +67,11 @@ function logHTTPClient(app) {
     const span = ctx.tracer.startSpan('http_client');
     span.setTag('span.kind', 'client');
     ctx.tracer.inject(span.context(), 'HTTP', args.headers);
-    ctx[httpClientSpan] = span;
+    req[_span] = span;
   });
 
   app.httpclient.on('response', ({ req, res }) => {
-    const ctx = req.ctx;
-    const span = ctx[httpClientSpan];
+    const span = req[_span];
     const address = req.socket.address();
     span.setTag('peer.hostname', req.options.host);
     span.setTag('peer.port', req.options.port);
