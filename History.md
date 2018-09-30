@@ -1,4 +1,10 @@
 
+1.1.1 / 2018-09-30
+==================
+
+**fixes**
+  * [[`edc1ea3`](http://github.com/eggjs/egg-opentracing/commit/edc1ea3da5f3626ee54ce315d905f1e07f9f00b5)] - fix: span is missing in multi client request (#5) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 1.1.0 / 2018-06-29
 ==================
 
