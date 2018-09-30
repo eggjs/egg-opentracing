@@ -176,6 +176,7 @@ describe('test/lib/opentracing.test.js', () => {
         .get('/ctx_curl')
         .expect(200);
 
+      assert(app.config.spans && app.config.spans.length === 2);
       const tags = app.config.spans[0].getTags();
       assert(tags.appname === 'opentracing-test');
       assert(tags['worker.id'] === 0);
@@ -188,6 +189,29 @@ describe('test/lib/opentracing.test.js', () => {
       assert(tags['peer.hostname'] === 'www.alibaba.com');
       assert(tags['peer.port'] === 80);
       assert(/\d+\.\d+\.\d+\.\d+/.test(tags['peer.ipv4']));
+    });
+
+    it('should support multi ctx.curl', async () => {
+      await app.httpRequest()
+        .get('/ctx_multi_curl')
+        .expect(200);
+
+      assert(app.config.spans && app.config.spans.length === 3);
+      let tags = app.config.spans[0].getTags();
+      assert(tags.appname === 'opentracing-test');
+      assert(tags['worker.id'] === 0);
+      assert(tags['process.id'] === process.pid);
+      assert(tags['http.url'] === 'http://www.aliexpress.com/');
+      assert(tags['http.method'] === 'GET');
+      assert(tags['http.status_code'] === 200);
+      assert(tags['http.request_size'] === 0);
+      assert(tags['http.response_size']);
+      assert(tags['peer.hostname'] === 'www.aliexpress.com');
+      assert(tags['peer.port'] === 80);
+      assert(/\d+\.\d+\.\d+\.\d+/.test(tags['peer.ipv4']));
+
+      tags = app.config.spans[1].getTags();
+      assert(tags['http.url'] === 'http://www.alibaba.com/');
     });
   });
 
