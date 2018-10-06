@@ -3,6 +3,7 @@
 module.exports = {
   write: true,
   prefix: '^',
+  plugin: 'autod-egg',
   test: [
     'test',
     'benchmark',
@@ -15,10 +16,10 @@ module.exports = {
     'autod-egg',
     'eslint',
     'eslint-config-egg',
+    'egg-rpc-generator',
     'webstorm-disable-index',
   ],
   exclude: [
-    './test/fixtures',
     './docs',
     './coverage',
   ],

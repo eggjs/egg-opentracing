@@ -3,7 +3,8 @@ npm-debug.log
 node_modules/
 coverage/
 .idea/
-run/
+run
 .DS_Store
 *.swp
-
+test/fixtures/apps/**/app/public
+test/fixtures/apps/**/logs
