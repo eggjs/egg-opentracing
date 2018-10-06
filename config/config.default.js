@@ -16,6 +16,7 @@ module.exports = (appInfo, appConfig) => {
     globalTracer: require('../lib/tracer'),
     carrier: {
       HTTP: require('../lib/carrier/http_carrier'),
+      RPC: require('../lib/carrier/rpc_carrier'),
     },
     collector: {
       log: require('../lib/collector/log_collector'),

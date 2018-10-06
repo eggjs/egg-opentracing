@@ -105,10 +105,10 @@ describe('test/lib/tracer.test.js', () => {
 
     it('should throw when no carrier is matched', async () => {
       try {
-        ctx.tracer.inject({}, 'RPC');
+        ctx.tracer.inject({}, 'UNKNOWN');
         throw new Error('should not run');
       } catch (err) {
-        assert(err.message === 'RPC is unknown carrier');
+        assert(err.message === 'UNKNOWN is unknown carrier');
       }
     });
   });
@@ -162,10 +162,10 @@ describe('test/lib/tracer.test.js', () => {
 
     it('should throw when no carrier is matched', async () => {
       try {
-        ctx.tracer.extract('RPC');
+        ctx.tracer.extract('UNKNOWN');
         throw new Error('should not run');
       } catch (err) {
-        assert(err.message === 'RPC is unknown carrier');
+        assert(err.message === 'UNKNOWN is unknown carrier');
       }
     });
   });
