@@ -17,7 +17,6 @@
     "test": "npm run lint && npm run test-local",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
-    "autod": "autod",
     "ci": "npm run lint && npm run cov"
   },
   "repository": {
@@ -33,22 +32,15 @@
     "opentracing": "^0.14.3"
   },
   "devDependencies": {
-    "autod": "^3.0.1",
-    "autod-egg": "^1.1.0",
     "egg": "^2.9.1",
     "egg-bin": "^4.7.0",
-    "egg-ci": "^1.8.0",
     "egg-mock": "^3.17.2",
     "eslint": "^5.0.1",
     "eslint-config-egg": "^7.0.0",
     "mz": "^2.7.0",
-    "mz-modules": "^2.1.0",
-    "webstorm-disable-index": "^1.2.0"
+    "mz-modules": "^2.1.0"
   },
   "engines": {
     "node": ">= 8.0.0"
-  },
-  "ci": {
-    "version": "8, 10"
   }
 }
