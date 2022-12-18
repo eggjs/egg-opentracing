@@ -1,6 +1,7 @@
 # egg-opentracing
 
 [![NPM version][npm-image]][npm-url]
+[![CI](https://github.com/eggjs/egg-opentracing/actions/workflows/nodejs.yml/badge.svg)](https://github.com/eggjs/egg-opentracing/actions/workflows/nodejs.yml)
 [![Test coverage][codecov-image]][codecov-url]
 [![Known Vulnerabilities][snyk-image]][snyk-url]
 [![npm download][download-image]][download-url]
